@@ -1,0 +1,1 @@
+dette er en test for å skrekke git rettigheter
