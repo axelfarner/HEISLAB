@@ -1,2 +1,3 @@
 dette er en test for å skrekke git rettigheter
 du hadde skrekkelig mange rettigheter viste det seg
+Jeg kommer til å skrekke deg Jens
