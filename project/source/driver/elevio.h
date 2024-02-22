@@ -19,26 +19,56 @@ typedef enum {
 } ButtonType;
 
 
-//initializes elevator (use in the beginning)
+
+
+/// @brief Initializes elevator 
 void elevio_init(void);
 
-//sets motor direction, keeps motor going that direction until called otherwise
+
+
+/// @brief Sets motor direction, keeps motor going that direction until function called again with other parameter
+/// @param[in] dirn Wanted direction of motor
 void elevio_motorDirection(MotorDirection dirn);
-//sets inputted buttonType in inputted floor to on if value 1, and turns light of value 0
+
+/// @brief Sets inputted buttonType in inputted floor to on if value 1, and turns light of if value 0
+/// @param[in] floor Floor of button which lamp is being set
+/// @param[in] button Buttontype of button which lamp is being set
+/// @param[in] value 1 if button lamp is being turned on, 0 if button lamp being turned of
 void elevio_buttonLamp(int floor, ButtonType button, int value);
-//sets floor indicator lamp of input
+
+
+/// @brief Sets floor indicator lamp of inputted floor
+/// @param[in] floor Current floor
 void elevio_floorIndicator(int floor);
-//if input value 1: door light on, value 0: door light of
+
+
+/// @brief Turns door light on and off
+/// @param[in] value 1 if lamp being turned on, 0 if being turned off
 void elevio_doorOpenLamp(int value);
- //if value 1: turns on stop lamp, if value 0: turns of stop lamp
+
+
+/// @brief Turns stop button lamp on or off
+/// @param[in] value 1 if stop button lamp being turned on, 0 if being turned off 
 void elevio_stopLamp(int value);
 
-//uses floor and buttontype, and returns 1 is buttontype is pressed in floor, 0 if not
+
+/// @brief Checks if a specified button on a specified floor is pressed
+/// @param[in] floor The floor of the button
+/// @param[in] button The type of button (inside, outside up or outside down)
+/// @return 1 if button is pressed, 0 if not
 int elevio_callButton(int floor, ButtonType button);
-//returns current floor, and -1 if between floors
+
+
+/// @brief Checks if the elevator is on a floor
+/// @return Current floor of elevator, -1 if elevator currently between floors
 int elevio_floorSensor(void);
-//returns 1 if stopButton pressed, 0 if not
+
+/// @brief Checks if the stop button is pressed 
+/// @return 1 if stop button pressed, 0 if not
 int elevio_stopButton(void);
-//returns 1 if obstruction, 0 if not
+
+
+/// @brief Chekcs if obstruction in the way 
+/// @return 1 if obstruction, 0 if no obstruction
 int elevio_obstruction(void);
 
