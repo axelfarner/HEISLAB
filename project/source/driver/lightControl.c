@@ -12,27 +12,32 @@ void activateLight(int floor, ButtonType button){
     assert(floor<4 && floor>=0);
     switch(button) {
         case BUTTON_HALL_DOWN:
-            hallLightUpStates[floor] = true;
+            hallLightUpStates[floor-1] = true;
             break;
         case BUTTON_HALL_UP:
-            hallLightDownStates[floor] = true;
+            hallLightDownStates[floor-1] = true;
             break;
         case BUTTON_CAB:
-            cabLightStates[floor] = true;
+            cabLightStates[floor-1] = true;
     }
     elevio_buttonLamp(floor,button, 1);
 }
+
 
 void deactivateLight(int floor){
     for(int i = 0; i < 3; i++){
     elevio_buttonLamp(floor, (ButtonType) i, 0);
     }
 
-    hallLightDownStates[floor] = false;
-    hallLightUpStates[floor] = false;
-    cabLightStates[floor] = false;
+    hallLightDownStates[floor-1] = false;
+    hallLightUpStates[floor-1] = false;
+    cabLightStates[floor-1] = false;
+
+    return;
 }
+
 
 void activateFloorLight(int floor){
     elevio_floorIndicator(floor);
+    return;
 }
