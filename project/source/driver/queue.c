@@ -6,9 +6,9 @@ bool downQueue[4] = {false};
 //Skal det være floor-1 eller floor
 void addToQueue(Direction dir, int floor){
     if (dir == UP){
-        upQueue[floor-1] = true;
+        upQueue[floor] = true;
     } else if (dir == DOWN) {
-        downQueue[floor-1] = true;
+        downQueue[floor] = true;
     }
     return;
 }

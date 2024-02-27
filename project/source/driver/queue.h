@@ -1,11 +1,9 @@
 #pragma once
 
 #include "stdbool.h"
+#include "elevatorController.h"
 
-typedef enum{
-    UP = 0,
-    DOWN = 1
-} Direction;
+
 
 /// @brief Adds a request to either up or down queue
 /// @param[in] dir Direction of request
@@ -17,3 +15,5 @@ void addToQueue(Direction dir, int floor);
 /// @param[in] dir Queue that is being checked
 /// @return 1 if in queue, 0 if not
 bool isFloorInQueue(int floor, Direction dir);
+
+void clearQueue();

@@ -29,9 +29,9 @@ void deactivateLight(int floor){
     elevio_buttonLamp(floor, (ButtonType) i, 0);
     }
 
-    hallLightDownStates[floor-1] = false;
-    hallLightUpStates[floor-1] = false;
-    cabLightStates[floor-1] = false;
+    hallLightDownStates[floor] = false;
+    hallLightUpStates[floor] = false;
+    cabLightStates[floor] = false;
 
     return;
 }
