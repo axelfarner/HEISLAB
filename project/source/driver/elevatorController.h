@@ -1,11 +1,20 @@
 #pragma once
 
 typedef enum{
-    UP = 0,
-    DOWN = 1
+    UP = 1,
+    DOWN = -1
 } Direction;
 
+int stop = 0;
+
 int currentFloor;
-Direction serviceMode;
+Direction serviceMode = UP;
 
 void runElevator();
+
+int checkFloor();
+
+void openDoor();
+
+int moreFloorsInDirection;
+void runQueue();

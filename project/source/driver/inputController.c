@@ -2,7 +2,7 @@
 
 void createQueueEntry(ButtonType button, int floor);
 
-void checkButtonStates(){
+int checkButtonStates(){
     if(elevio_stopButton()){
         return -1;
     }
@@ -20,6 +20,9 @@ void checkButtonStates(){
 
 void createQueueEntry(ButtonType button, int floor){
     Direction dir;
+
+    activateLight(floor, button);
+
     if(button == BUTTON_HALL_UP){
         dir = UP;
     } else if (button == BUTTON_HALL_DOWN){
