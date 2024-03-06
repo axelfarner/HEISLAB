@@ -1,20 +1,15 @@
 #pragma once
 
-typedef enum{
+typedef enum {
     UP = 1,
     DOWN = -1
 } Direction;
 
-int stop = 0;
-
 int currentFloor;
+
+bool doorIsOpen;
+
 Direction serviceMode = UP;
 
+/// @brief runs elevator continously. Contains main loop. 
 void runElevator();
-
-int checkFloor();
-
-void openDoor();
-
-int moreFloorsInDirection;
-void runQueue();
