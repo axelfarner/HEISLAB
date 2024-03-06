@@ -16,4 +16,5 @@ void addToQueue(Direction dir, int floor);
 /// @return 1 if in queue, 0 if not
 bool isFloorInQueue(int floor, Direction dir);
 
+/// @brief clears all entries from all queues
 void clearQueue();

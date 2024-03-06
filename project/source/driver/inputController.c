@@ -2,15 +2,15 @@
 
 void createQueueEntry(ButtonType button, int floor);
 
-int checkButtonStates(){
-    if(elevio_stopButton()){
+int checkButtonStates() {
+    if (elevio_stopButton()){
         return -1;
     }
     int state;
-    for(int i = 0; i<4; i++){
-        for(int j = 0; j<3; j++){
+    for (int i = 0; i < 4; i++){
+        for (int j = 0; j < 3; j++) {
             state = elevio_callButton(i, (ButtonType) j);
-            if(state){
+            if (state) {
                 createQueueEntry((ButtonType) j, i);
             }
         }
@@ -19,20 +19,49 @@ int checkButtonStates(){
 }
 
 void createQueueEntry(ButtonType button, int floor){
+    
     Direction dir;
 
-    activateLight(floor, button);
-
-    if(button == BUTTON_HALL_UP){
+    switch (button)
+    {
+    case BUTTON_HALL_UP:
         dir = UP;
-    } else if (button == BUTTON_HALL_DOWN){
+        break;
+
+    case BUTTON_HALL_DOWN:
         dir = DOWN;
-    } else if(button == BUTTON_CAB){
-        if(floor>currentFloor){
+        break;
+
+    case BUTTON_CAB:
+
+        if (floor > currentFloor) 
+        {
             dir = UP;
-        } else if(floor<currentFloor){
+        } else if (floor < currentFloor)
+        {
             dir = DOWN;
-        } 
+        } else 
+        {
+            // hvis etasjen er nåværende etasje, og døren er åpen, do nothing
+            if (doorIsOpen) {
+                return;
+            }
+
+
+            switch (serviceMode)
+            {
+            case DOWN:
+                dir = UP;
+                break;
+            
+            case UP:
+                dir = DOWN;
+                break;
+            }
+        }        
+        break;
     }
+
+    activateLight(floor, button);
     addToQueue(dir, floor);
 }
