@@ -9,7 +9,7 @@ int checkFloorSensor();
 
 bool runQueue();
 
-int moveElevator();
+void moveElevator();
 
 bool shouldStop() 
 
@@ -96,7 +96,7 @@ int checkFloorSensor() {
     return sensorState;
 };
 
-int moveElevator() {
+void moveElevator() {
     if (runQueue()) {
         serviceMode = (serviceMode== DOWN) ? UP : DOWN;
 
