@@ -2,8 +2,9 @@
 
 void createQueueEntry(ButtonType button, int floor);
 
-int checkButtonStates() {
-    if (elevio_stopButton()){
+int processInput() {
+    if (elevio_stopButton()) {
+        clearQueue();
         return -1;
     }
     int state;
@@ -58,7 +59,7 @@ void createQueueEntry(ButtonType button, int floor){
                 dir = DOWN;
                 break;
             }
-        }        
+        }
         break;
     }
 

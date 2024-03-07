@@ -1,4 +1,5 @@
 #include "queue.h"
+#include <stdio.h>
 
 bool upQueue[4] = {false, false, false, false};
 bool downQueue[4] = {false, false, false, false};
@@ -13,6 +14,8 @@ void addToQueue(Direction dir, int floor) {
     } else if (dir == DOWN) {
         downQueue[floor] = true;
     }
+
+    printQueues();
     return;
 }
 
@@ -38,4 +41,11 @@ void clearQueue() {
         upQueue[i] = false;
         downQueue[i] = false;
     }   
+}
+
+
+void printQueues() {
+    printf("--------------------------------\n");
+    printf("Up-queue: %d, %d, %d, %d\n", upQueue[0],upQueue[1],upQueue[2],upQueue[3]);
+    printf("Down-queue: %d, %d, %d, %d\n", downQueue[0],downQueue[1],downQueue[2],downQueue[3]);
 }

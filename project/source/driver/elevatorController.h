@@ -1,11 +1,14 @@
 #pragma once
 #include <stdbool.h>
+#include "elevio.h"
+#include "queue.h"
+#include "inputController.h"
+#include "lightControl.h"
+#include <stdio.h>
 
 
-typedef enum {
-    UP = 1,
-    DOWN = -1
-} Direction;
+
+
 
 int currentFloor;
 

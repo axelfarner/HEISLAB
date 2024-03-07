@@ -1,6 +1,4 @@
 #include "elevatorController.h"
-#include "elevio.h"
-#include "queue.h"
 
 /// @brief Opens door for 3 seconds. Holds door open if stopbutton pressed
 void openDoor();
@@ -13,18 +11,29 @@ void moveElevator();
 
 void initializeElevator(){
     elevio_init();
+    
+    // Turn off lights
+    elevio_doorOpenLamp(0);
+    
+    for (int i = 0; i < 4; i++)
+    {
+        deactivateLight(i);
+    }
+    
     serviceMode = DOWN;
     elevio_motorDirection(DIRN_DOWN);
     while(checkFloorSensor() == -1){ // this might be a problem >B-P
     }
+
+    activateFloorLight(currentFloor);
     elevio_motorDirection(DIRN_STOP);
+    printf("Initialization complete! \n ================================\n");
 }
 
 void runElevator() {
     while(true) {
-        if (checkButtonStates() == -1) {
+        if (processInput() == -1) {
 
-            clearQueue();
             elevio_motorDirection(DIRN_STOP);
             for (int i = 0; i<4; i++){
                 deactivateLight(i);
@@ -40,6 +49,7 @@ void runElevator() {
         if (isFloorInQueue(checkFloorSensor(), serviceMode)) {
             elevio_motorDirection(DIRN_STOP);
             deactivateLight(currentFloor);
+            activateFloorLight(currentFloor);
             openDoor();
         }
 
@@ -83,7 +93,7 @@ void moveElevator() {
     }
 
     if (floorInQueue) {
-        elevio_motorDirection((MotorDirection) serviceMode);
+        elevio_motorDirection((MotorDirection) serviceMode); // casting serviceMode to MotorDirection
 
     } else {
         // bytter serviceMode
@@ -104,9 +114,8 @@ void openDoor() {
     int closeTime = time() + 4;
 
     while(time() < closeTime || elevio_obstruction()) {
-        if (checkButtonStates() == -1) {
+        if (processInput() == -1) {
             closeTime = time() + 4;
-            clearQueue();
             for (int i = 0; i<4; i++){
                 deactivateLight(i);
             }
