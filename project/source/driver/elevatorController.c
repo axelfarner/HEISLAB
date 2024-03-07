@@ -13,6 +13,8 @@ int moveElevator();
 
 bool shouldStop() 
 
+bool serviceModeChanging;
+
 void initializeElevator(){
     elevio_init();
     
@@ -30,15 +32,17 @@ void initializeElevator(){
     }
 
     activateFloorLight(currentFloor);
-    elevio_motorDirection(DIRN_STOP);
+    stop();
+    serviceModeChanging = false;
     printf("Initialization complete! \n ================================\n");
 }
 
 void runElevator() {
     while(true) {
+
         if (processInput() == -1) {
 
-            elevio_motorDirection(DIRN_STOP);
+            stop();
             for (int i = 0; i<4; i++){
                 deactivateLight(i);
             }
@@ -64,7 +68,42 @@ void runElevator() {
 };
 
 bool shouldStop() {
-    return isFloorInQueue(checkFloorSensor(), serviceMode);
+    bool shouldStop = 0;
+    
+    if (isFloorInQueue(checkFloorSensor(), serviceMode)) {
+        shouldStop = 1;
+
+        if (serviceModeChanging) {
+
+            switch (serviceMode)
+            {
+            case UP:
+                for (int i = 0; i < currentFloor; i++)
+                {
+                    if (isFloorInQueue(i, UP)) {
+                        shouldStop = false;
+                        break;
+                    }
+                }
+                
+                break;
+
+            case DOWN:
+                for (int i = 3; i > currentFloor; i--)
+                {
+                    if (isFloorInQueue(i, DOWN)) {
+                        shouldStop = false;
+                        break;
+                    }
+                }
+
+                break;
+            }
+            serviceModeChanging = !shouldStop;
+        }
+
+    }
+   return shouldStop;
 }
 
 int checkFloorSensor() {
@@ -78,13 +117,13 @@ int checkFloorSensor() {
 
 int moveElevator() {
     if (runQueue()) {
-        int minFloor;
+        serviceModeChanging = true;
         if (serviceMode == UP) {
             serviceMode = DOWN;
-            minFloor = 5;
+            moveUp();
         } else {
             serviceMode = UP;
-            minFloor = -1;
+            moveUp();
         }
     }
 }

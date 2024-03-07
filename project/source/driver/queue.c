@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 bool upQueue[4] = {false, false, false, false};
+
 bool downQueue[4] = {false, false, false, false};
 
 void addToQueue(Direction dir, int floor) {
