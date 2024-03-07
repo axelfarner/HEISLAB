@@ -41,7 +41,7 @@ void runElevator() {
     while(true) {
 
         if (processInput() == -1) {
-
+            elevio_stopLamp(1);
             stop();
             for (int i = 0; i<4; i++){
                 deactivateLight(i);
@@ -53,6 +53,8 @@ void runElevator() {
             // hopper tilbake til toppen
             continue;
         }
+        elevio_stopLamp(0);
+        
         if (shouldStop()) {
             stop();
             // activates lights
@@ -75,7 +77,7 @@ bool shouldStop() {
 
         if (inTransitionMode) {
 
-            if (floorInQueueBeyondFloor(serviceMode, currentFloor)) {
+            if (queueEntryBeyondFloor(serviceMode, currentFloor)) {
                 shouldStop = false;
             }
 
@@ -97,23 +99,26 @@ int checkFloorSensor() {
 };
 
 void moveElevator() {
-    if (runQueue()) {
+    if (!runQueue()) {
+        // swaps servicemode
         serviceMode = (serviceMode== DOWN) ? UP : DOWN;
 
-        if (floorInQueueBeyondFloor(serviceMode,currentFloor)) {
+        if (queueEntryBeyondFloor(serviceMode,currentFloor)) {
             inTransitionMode = true;
             (serviceMode == DOWN) ? moveUp() : moveDown();
         }
     }
 }
 
+/// @brief Tries to move to next entry in queue, if any exist
+/// @return 1 if moved, 0 if not.
 bool runQueue() {
     bool floorInQueue = false;
 
     switch (serviceMode)
     {
         case UP:
-            for(int i = currentFloor+1; i < 4; i++) {
+            for(int i = currentFloor; i < 4; i++) {
                 if (isFloorInQueue(i, serviceMode)) {
                     floorInQueue = true;
                     break;
@@ -125,7 +130,7 @@ bool runQueue() {
             break;
         
         case DOWN:
-            for(int i = currentFloor-1; i > -1; i--) {
+            for(int i = currentFloor; i > -1; i--) {
                 if (isFloorInQueue(i, serviceMode)) {
                     floorInQueue = true;
                     break;
@@ -136,7 +141,7 @@ bool runQueue() {
             }
             break;
     }
-    return !floorInQueue;
+    return floorInQueue;
 }
 
 void openDoor() {
@@ -155,7 +160,9 @@ void openDoor() {
             for (int i = 0; i<4; i++){
                 deactivateLight(i);
             }
+            elevio_stopLamp(1);
         }
+        elevio_stopLamp(0);
     }
 
     elevio_doorOpenLamp(0);

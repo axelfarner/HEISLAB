@@ -52,7 +52,7 @@ void printQueues() {
 }
 
 
-bool floorInQueueBeyondFloor(Direction dir, int floor) {
+bool queueEntryBeyondFloor(Direction dir, int floor) {
     switch (dir)
         {
         case UP:

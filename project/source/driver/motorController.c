@@ -9,6 +9,6 @@ void moveDown() {
     isElevatorMoving = true;
 }
 void stop() {
-        elevio_motorDirection(DIRN_STOP);
+    elevio_motorDirection(DIRN_STOP);
     isElevatorMoving = false;
 }
