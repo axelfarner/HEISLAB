@@ -3,17 +3,20 @@
 #include <signal.h>
 #include <time.h>
 #include "driver/elevio.h"
+#include "driver/elevatorController.h"
+
+
 
 
 
 int main(){
-    elevio_init();
-    
-    printf("=== Example Program ===\n");
-    printf("Press the stop button on the elevator panel to exit\n");
+    initializeElevator();
 
-    elevio_motorDirection(DIRN_UP);
+    runElevator();
 
+
+
+    /* Cokmenting out in favour to runElevator();
     while(1){
         int floor = elevio_floorSensor();
 
@@ -44,8 +47,9 @@ int main(){
             break;
         }
         
-        nanosleep(&(struct timespec){0, 20*1000*1000}, NULL);
+        nanosleep(&(struct timespec){0, 20*1000*1000}, NULL);    
     }
+    */
 
     return 0;
 }
