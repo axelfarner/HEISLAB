@@ -1,4 +1,6 @@
 #pragma once
+#include <stdbool.h>
+
 
 typedef enum {
     UP = 1,
@@ -9,7 +11,9 @@ int currentFloor;
 
 bool doorIsOpen;
 
-Direction serviceMode = UP;
+Direction serviceMode;
 
 /// @brief runs elevator continously. Contains main loop. 
 void runElevator();
+
+void initializeElevator();

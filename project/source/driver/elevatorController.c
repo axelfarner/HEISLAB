@@ -11,6 +11,14 @@ int checkFloorSensor();
 
 void moveElevator();
 
+void initializeElevator(){
+    elevio_init();
+    serviceMode = DOWN;
+    elevio_motorDirection(DIRN_DOWN);
+    while(checkFloorSensor() == -1){ // this might be a problem >B-P
+    }
+    elevio_motorDirection(DIRN_STOP);
+}
 
 void runElevator() {
     while(true) {
@@ -18,6 +26,9 @@ void runElevator() {
 
             clearQueue();
             elevio_motorDirection(DIRN_STOP);
+            for (int i = 0; i<4; i++){
+                deactivateLight(i);
+            }
 
             if (checkFloorSensor() != -1) {
                 openDoor();
@@ -95,6 +106,10 @@ void openDoor() {
     while(time() < closeTime || elevio_obstruction()) {
         if (checkButtonStates() == -1) {
             closeTime = time() + 4;
+            clearQueue();
+            for (int i = 0; i<4; i++){
+                deactivateLight(i);
+            }
         }
     }
 
