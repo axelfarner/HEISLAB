@@ -75,30 +75,10 @@ bool shouldStop() {
 
         if (inTransitionMode) {
 
-            switch (serviceMode)
-            {
-            case UP:
-                for (int i = 0; i < currentFloor; i++)
-                {
-                    if (isFloorInQueue(i, UP)) {
-                        shouldStop = false;
-                        break;
-                    }
-                }
-                
-                break;
-
-            case DOWN:
-                for (int i = 3; i > currentFloor; i--)
-                {
-                    if (isFloorInQueue(i, DOWN)) {
-                        shouldStop = false;
-                        break;
-                    }
-                }
-
-                break;
+            if (floorInQueueBeyondFloor(serviceMode, currentFloor)) {
+                shouldStop = false;
             }
+
             // if elevator stops, then it has left transition Mode
             inTransitionMode = !shouldStop;
         }
@@ -118,25 +98,11 @@ int checkFloorSensor() {
 
 int moveElevator() {
     if (runQueue()) {
-        serviceMode = (serviceMode == UP) ? DOWN : UP;
+        serviceMode = (serviceMode== DOWN) ? UP : DOWN;
 
-        
-
-        inTransitionMode = true;
-
-
-
-        if (serviceMode == UP) {
-            serviceMode = DOWN;
-            if (!queueIsEmpty(DOWN)) {
-                moveUp();
-            }
-        } else {
-            serviceMode = UP;
-                if (!queueIsEmpty(UP)) {
-                moveDown();
-            }
-            moveUp();
+        if (floorInQueueBeyondFloor(serviceMode,currentFloor)) {
+            inTransitionMode = true;
+            (serviceMode == DOWN) ? moveUp() : moveDown();
         }
     }
 }
