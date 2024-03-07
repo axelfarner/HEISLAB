@@ -23,5 +23,11 @@ bool isFloorInQueue(int floor, Direction dir);
 /// @brief clears all entries from all queues
 void clearQueue();
 
+/// @brief checks whether the queue contains a floor "beyond" a specified floor in the direction specified. 
+/// @param dir 
+/// @param floor 
+/// @return 1 if floor exists, 0 if not
+bool floorInQueueBeyondFloor(Direction dir, int floor);
+
 /// @brief prints both queues, for debug :)
 void printQueues();

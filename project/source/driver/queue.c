@@ -50,3 +50,30 @@ void printQueues() {
     printf("Up-queue: %d, %d, %d, %d\n", upQueue[0],upQueue[1],upQueue[2],upQueue[3]);
     printf("Down-queue: %d, %d, %d, %d\n", downQueue[0],downQueue[1],downQueue[2],downQueue[3]);
 }
+
+
+bool floorInQueueBeyondFloor(Direction dir, int floor) {
+    switch (dir)
+        {
+        case UP:
+            for (int i = 0; i < floor; i++)
+            {
+                if (upQueue[i]) {
+                    return true;
+                }
+            }
+            
+            break;
+
+        case DOWN:
+            for (int i = 3; i > floor; i--)
+            {
+                if (downQueue[i]) {
+                    return true;
+                }
+            }
+
+            break;
+        }
+    return false;
+}

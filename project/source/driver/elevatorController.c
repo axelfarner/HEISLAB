@@ -13,7 +13,7 @@ int moveElevator();
 
 bool shouldStop() 
 
-bool serviceModeChanging;
+bool inTransitionMode;
 
 void initializeElevator(){
     elevio_init();
@@ -33,7 +33,7 @@ void initializeElevator(){
 
     activateFloorLight(currentFloor);
     stop();
-    serviceModeChanging = false;
+    inTransitionMode = false;
     printf("Initialization complete! \n ================================\n");
 }
 
@@ -73,7 +73,7 @@ bool shouldStop() {
     if (isFloorInQueue(checkFloorSensor(), serviceMode)) {
         shouldStop = 1;
 
-        if (serviceModeChanging) {
+        if (inTransitionMode) {
 
             switch (serviceMode)
             {
@@ -99,7 +99,8 @@ bool shouldStop() {
 
                 break;
             }
-            serviceModeChanging = !shouldStop;
+            // if elevator stops, then it has left transition Mode
+            inTransitionMode = !shouldStop;
         }
 
     }
@@ -117,12 +118,24 @@ int checkFloorSensor() {
 
 int moveElevator() {
     if (runQueue()) {
-        serviceModeChanging = true;
+        serviceMode = (serviceMode == UP) ? DOWN : UP;
+
+        
+
+        inTransitionMode = true;
+
+
+
         if (serviceMode == UP) {
             serviceMode = DOWN;
-            moveUp();
+            if (!queueIsEmpty(DOWN)) {
+                moveUp();
+            }
         } else {
             serviceMode = UP;
+                if (!queueIsEmpty(UP)) {
+                moveDown();
+            }
             moveUp();
         }
     }
