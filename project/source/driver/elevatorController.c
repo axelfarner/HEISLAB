@@ -7,7 +7,11 @@ void openDoor();
 /// @return state of floor sensor. -1 if between floors. 
 int checkFloorSensor();
 
-void moveElevator();
+bool runQueue();
+
+int moveElevator();
+
+bool shouldStop() 
 
 void initializeElevator(){
     elevio_init();
@@ -21,7 +25,7 @@ void initializeElevator(){
     }
     
     serviceMode = DOWN;
-    elevio_motorDirection(DIRN_DOWN);
+    moveDown();
     while(checkFloorSensor() == -1){ // this might be a problem >B-P
     }
 
@@ -45,18 +49,23 @@ void runElevator() {
             // hopper tilbake til toppen
             continue;
         }
-
-        if (isFloorInQueue(checkFloorSensor(), serviceMode)) {
-            elevio_motorDirection(DIRN_STOP);
+        if (shouldStop()) {
+            stop();
+            // activates lights
             deactivateLight(currentFloor);
             activateFloorLight(currentFloor);
             openDoor();
-        }
+        } 
 
-        moveElevator();
+        if (!isElevatorMoving) {
+            moveElevator();
+        }
     }
 };
 
+bool shouldStop() {
+    return isFloorInQueue(checkFloorSensor(), serviceMode);
+}
 
 int checkFloorSensor() {
     int sensorState = elevio_floorSensor();
@@ -67,8 +76,20 @@ int checkFloorSensor() {
     return sensorState;
 };
 
+int moveElevator() {
+    if (runQueue()) {
+        int minFloor;
+        if (serviceMode == UP) {
+            serviceMode = DOWN;
+            minFloor = 5;
+        } else {
+            serviceMode = UP;
+            minFloor = -1;
+        }
+    }
+}
 
-void moveElevator() {
+bool runQueue() {
     bool floorInQueue = false;
 
     switch (serviceMode)
@@ -80,6 +101,9 @@ void moveElevator() {
                     break;
                 }
             }
+            if (floorInQueue) {
+                moveUp();
+            }
             break;
         
         case DOWN:
@@ -89,28 +113,22 @@ void moveElevator() {
                     break;
                 }
             }
+            if (floorInQueue) {
+                moveDown();
+            }
             break;
     }
-
-    if (floorInQueue) {
-        elevio_motorDirection((MotorDirection) serviceMode); // casting serviceMode to MotorDirection
-
-    } else {
-        // bytter serviceMode
-        if (serviceMode == UP) {
-            serviceMode =  DOWN;
-        } else {
-            serviceMode = UP;
-        }
-    }
+    return !floorInQueue;
 }
 
 void openDoor() {
     // opens door
     elevio_doorOpenLamp(1);
+
+    // sets status flag 
     doorIsOpen = true;
 
-    // desired time to close door
+    // desired closing time for door
     int closeTime = time() + 4;
 
     while(time() < closeTime || elevio_obstruction()) {
