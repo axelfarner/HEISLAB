@@ -73,6 +73,7 @@ void moveElevator() {
 
     if (floorInQueue) {
         elevio_motorDirection((MotorDirection) serviceMode);
+
     } else {
         // bytter serviceMode
         if (serviceMode == UP) {
@@ -83,16 +84,15 @@ void moveElevator() {
     }
 }
 
-
-
 void openDoor() {
     // opens door
     elevio_doorOpenLamp(1);
     doorIsOpen = true;
-    // desired time to close
+
+    // desired time to close door
     int closeTime = time() + 4;
 
-    while(time() < closeTime) {
+    while(time() < closeTime || elevio_obstruction()) {
         if (checkButtonStates() == -1) {
             closeTime = time() + 4;
         }

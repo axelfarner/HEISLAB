@@ -1,13 +1,13 @@
 #include "queue.h"
 
-bool upQueue[4] = {false};
-bool downQueue[4] = {false};
+bool upQueue[4] = {false, false, false, false};
+bool downQueue[4] = {false, false, false, false};
 
 void addToQueue(Direction dir, int floor) {
     if (floor < 0 || floor > 3) {
         return;
     }
-
+    
     if (dir == UP){
         upQueue[floor] = true;
     } else if (dir == DOWN) {
