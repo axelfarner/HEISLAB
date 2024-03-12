@@ -25,25 +25,18 @@ void addToQueue(Direction dir, int floor)
     return;
 }
 
-void removeFromQueue(Direction dir, int floor)
+void removeFromQueue(int floor)
 {
     if (floor < 0 || floor > 3)
     {
         return;
         printf("Tried to remove invalid floor: %d", floor);
     }
-
-    switch (dir)
-    {
-    case UP:
-        upQueue[floor] = 0;
-        break;
-
-    case DOWN:
-        downQueue[floor] = 0;
-        break;
-    }
+    
+    upQueue[floor] = 0;
+    downQueue[floor] = 0;
 }
+    
 
 bool isFloorInQueue(int floor, Direction dir)
 {

@@ -88,7 +88,7 @@ void runElevator()
             // activates lights
             deactivateLight(currentFloor);
             activateFloorLight(currentFloor);
-            removeFromQueue(serviceMode, currentFloor);
+            removeFromQueue(currentFloor);
             // printQueues();
             openDoor();
         }

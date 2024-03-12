@@ -25,7 +25,7 @@ bool isFloorInQueue(int floor, Direction dir);
 /// @brief Removes specific entry from queue
 /// @param dir Working mode
 /// @param floor Floor where entry should be removed
-void removeFromQueue(Direction dir, int floor);
+void removeFromQueue(int floor);
 
 /// @brief clears all entries from all queues
 void clearQueue();
