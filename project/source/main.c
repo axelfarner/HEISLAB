@@ -3,7 +3,6 @@
 #include <signal.h>
 #include <time.h>
 #include "driver/elevatorController.h"
-#include "driver/inputController.h"
 
 
 

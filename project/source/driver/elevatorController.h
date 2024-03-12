@@ -1,20 +1,22 @@
+// #ifndef ELEVATORCONTROLLER
+// #define ELEVATORCONTROLLER
+
 #pragma once
+
 #include <stdbool.h>
-#include "elevio.h"
 #include "queue.h"
-#include "inputController.h"
-#include "lightControl.h"
-#include <stdio.h>
 #include "motorController.h"
+#include "stdio.h"
 
-int currentFloor;
+extern int currentFloor;
 
-bool doorIsOpen;
+extern bool doorIsOpen;
 
-Direction serviceMode;
+extern Direction serviceMode;
 
 /// @brief runs elevator continously. Contains main loop. 
 void runElevator();
 
 /// @brief initializes elevator control. Must be run before elevator can be started. 
 void initializeElevator();
+// #endif

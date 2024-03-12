@@ -11,11 +11,17 @@ bool runQueue();
 
 void moveElevator();
 
-bool shouldStop() 
+bool shouldStop();
 
-bool inTransitionMode;
+bool inTransitionMode = false;
 
-void initializeElevator(){
+int currentFloor = 0;
+
+bool doorIsOpen = false;
+
+Direction serviceMode = DOWN;
+
+void initializeElevator() {
     elevio_init();
     
     // Turn off lights
@@ -67,7 +73,7 @@ void runElevator() {
             moveElevator();
         }
     }
-};
+}
 
 bool shouldStop() {
     bool shouldStop = 0;
@@ -96,7 +102,7 @@ int checkFloorSensor() {
         currentFloor = sensorState;
     }
     return sensorState;
-};
+}
 
 void moveElevator() {
     if (!runQueue()) {
@@ -167,4 +173,4 @@ void openDoor() {
 
     elevio_doorOpenLamp(0);
     doorIsOpen = false;
-};
+}

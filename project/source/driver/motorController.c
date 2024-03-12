@@ -1,5 +1,7 @@
 #include "motorController.h"
 
+bool isElevatorMoving = false;
+
 void moveUp() {
     elevio_motorDirection(DIRN_UP);
     isElevatorMoving = true;
