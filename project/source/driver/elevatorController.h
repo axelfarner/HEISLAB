@@ -11,8 +11,8 @@ extern bool doorIsOpen;
 
 extern Direction serviceMode;
 
-/// @brief runs elevator continously. Contains main loop. 
+/// @brief Initializes elevator, then runs continous main loop controlling the elevator. 
 void runElevator();
 
-/// @brief initializes elevator control. Must be run before elevator can be started. 
+/// @brief initializes elevator. 
 void initializeElevator();

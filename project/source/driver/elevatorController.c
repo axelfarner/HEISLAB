@@ -7,18 +7,30 @@ void openDoor();
 /// @return state of floor sensor. -1 if between floors.
 int checkFloorSensor();
 
+/// @brief Moves elevator in direction of serviceMode, if there are queued floors in "serviceMode direction" beyond current floor.
+/// @return 1 if moved, 0 if not.
 bool runQueue();
 
+/// @brief Handles all elevator movement. Starts movement in either up or down direction, if there are floors in the queue
 void moveElevator();
 
+/// @brief Checks whether the elevator should stop at currentfloor
+/// @return 1 if the elevator should stop, 0 if not 
 bool shouldStop();
 
+/// @brief Handles ordinary stops. Checks input continously while running, ends when door is closed.
+void stopAtFloor();
+
+/// @brief Asserted when elevator is switching serviceMode, negated when elevator stops for the first time. 
 bool inTransitionMode = false;
 
+/// @brief Last floor elevator reached
 int currentFloor = 0;
 
+/// @brief Asserted while door is open, negated when door closes
 bool doorIsOpen = false;
 
+/// @brief Current service mode
 Direction serviceMode = DOWN;
 
 void initializeElevator()
@@ -76,7 +88,7 @@ void runElevator()
             // activates lights
             deactivateLight(currentFloor);
             activateFloorLight(currentFloor);
-            removeFromQueue(serviceMode, currentFloor);
+            removeFromQueue(currentFloor);
             // printQueues();
             openDoor();
         }

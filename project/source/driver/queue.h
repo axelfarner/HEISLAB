@@ -6,7 +6,8 @@ typedef enum
     UP = 1,
     DOWN = -1
 } Direction;
-#include "elevatorController.h" // included to see flags, must be included after Direction is defined
+
+#include "elevatorController.h" // Only needed for debug. Must be included after Direction is defined
 
 /// @brief Adds a request to either up or down queue
 /// @param[in] dir Direction of request
@@ -24,7 +25,7 @@ bool isFloorInQueue(int floor, Direction dir);
 /// @brief Removes specific entry from queue
 /// @param dir Working mode
 /// @param floor Floor where entry should be removed
-void removeFromQueue(Direction dir, int floor);
+void removeFromQueue(int floor);
 
 /// @brief clears all entries from all queues
 void clearQueue();
