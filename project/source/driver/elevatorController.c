@@ -4,124 +4,208 @@
 void openDoor();
 
 /// @brief checks the floor sensor state. Updates currentFloor
-/// @return state of floor sensor. -1 if between floors. 
+/// @return state of floor sensor. -1 if between floors.
 int checkFloorSensor();
+
+bool runQueue();
 
 void moveElevator();
 
-void initializeElevator(){
+bool shouldStop();
+
+bool inTransitionMode = false;
+
+int currentFloor = 0;
+
+bool doorIsOpen = false;
+
+Direction serviceMode = DOWN;
+
+void initializeElevator()
+{
     elevio_init();
-    
+
     // Turn off lights
     elevio_doorOpenLamp(0);
-    
+
     for (int i = 0; i < 4; i++)
     {
         deactivateLight(i);
     }
-    
+
     serviceMode = DOWN;
-    elevio_motorDirection(DIRN_DOWN);
-    while(checkFloorSensor() == -1){ // this might be a problem >B-P
+    moveDown();
+    while (checkFloorSensor() == -1)
+    { // this might be a problem >B-P
     }
 
     activateFloorLight(currentFloor);
-    elevio_motorDirection(DIRN_STOP);
+    stop();
+    inTransitionMode = false;
     printf("Initialization complete! \n ================================\n");
 }
 
-void runElevator() {
-    while(true) {
-        if (processInput() == -1) {
+void runElevator()
+{
+    initializeElevator();
+    while (true)
+    {
 
-            elevio_motorDirection(DIRN_STOP);
-            for (int i = 0; i<4; i++){
+        if (processInput() == -1)
+        {
+            elevio_stopLamp(1);
+            stop();
+            for (int i = 0; i < 4; i++)
+            {
                 deactivateLight(i);
             }
 
-            if (checkFloorSensor() != -1) {
+            if (checkFloorSensor() != -1)
+            {
                 openDoor();
             }
             // hopper tilbake til toppen
             continue;
         }
 
-        if (isFloorInQueue(checkFloorSensor(), serviceMode)) {
-            elevio_motorDirection(DIRN_STOP);
+        elevio_stopLamp(0);
+
+        if (shouldStop())
+        {
+            stop();
+            // activates lights
             deactivateLight(currentFloor);
             activateFloorLight(currentFloor);
+            removeFromQueue(serviceMode, currentFloor);
+            // printQueues();
             openDoor();
         }
 
-        moveElevator();
-    }
-};
-
-
-int checkFloorSensor() {
-    int sensorState = elevio_floorSensor();
-
-    if (sensorState != -1) {
-        currentFloor = sensorState;
-    }
-    return sensorState;
-};
-
-
-void moveElevator() {
-    bool floorInQueue = false;
-
-    switch (serviceMode)
-    {
-        case UP:
-            for(int i = currentFloor+1; i < 4; i++) {
-                if (isFloorInQueue(i, serviceMode)) {
-                    floorInQueue = true;
-                    break;
-                }
-            }
-            break;
-        
-        case DOWN:
-            for(int i = currentFloor-1; i > -1; i--) {
-                if (isFloorInQueue(i, serviceMode)) {
-                    floorInQueue = true;
-                    break;
-                }
-            }
-            break;
-    }
-
-    if (floorInQueue) {
-        elevio_motorDirection((MotorDirection) serviceMode); // casting serviceMode to MotorDirection
-
-    } else {
-        // bytter serviceMode
-        if (serviceMode == UP) {
-            serviceMode =  DOWN;
-        } else {
-            serviceMode = UP;
+        if (!isElevatorMoving)
+        {
+            moveElevator();
         }
     }
 }
 
-void openDoor() {
-    // opens door
-    elevio_doorOpenLamp(1);
-    doorIsOpen = true;
+bool shouldStop()
+{
+    bool shouldStop = 0;
 
-    // desired time to close door
-    int closeTime = time() + 4;
+    if (isFloorInQueue(checkFloorSensor(), serviceMode))
+    {
+        shouldStop = 1;
 
-    while(time() < closeTime || elevio_obstruction()) {
-        if (processInput() == -1) {
-            closeTime = time() + 4;
-            for (int i = 0; i<4; i++){
-                deactivateLight(i);
+        if (inTransitionMode)
+        {
+
+            if (queueEntryBeyondFloor(serviceMode, currentFloor))
+            {
+                shouldStop = false;
+            }
+
+            // if elevator stops, then it has left transition Mode
+            inTransitionMode = !shouldStop;
+        }
+    }
+    return shouldStop;
+}
+
+int checkFloorSensor()
+{
+    int sensorState = elevio_floorSensor();
+
+    if (sensorState != -1)
+    {
+        currentFloor = sensorState;
+    }
+    return sensorState;
+}
+
+void moveElevator()
+{
+    if (!runQueue())
+    {
+        // swaps servicemode
+        serviceMode = (serviceMode == DOWN) ? UP : DOWN;
+
+        if (queueEntryBeyondFloor(serviceMode, currentFloor))
+        {
+            inTransitionMode = true;
+            (serviceMode == DOWN) ? moveUp() : moveDown();
+        }
+    }
+}
+
+/// @brief Tries to move to next entry in queue, if any exist
+/// @return 1 if moved, 0 if not.
+bool runQueue()
+{
+    bool floorInQueue = false;
+
+    switch (serviceMode)
+    {
+    case UP:
+        for (int i = currentFloor; i < 4; i++)
+        {
+            if (isFloorInQueue(i, serviceMode))
+            {
+                floorInQueue = true;
+                break;
             }
         }
+        if (floorInQueue)
+        {
+            moveUp();
+        }
+        break;
+
+    case DOWN:
+        for (int i = currentFloor; i > -1; i--)
+        {
+            if (isFloorInQueue(i, serviceMode))
+            {
+                floorInQueue = true;
+                break;
+            }
+        }
+        if (floorInQueue)
+        {
+            moveDown();
+        }
+        break;
+    }
+    return floorInQueue;
+}
+
+void openDoor()
+{
+    // opens door
+    elevio_doorOpenLamp(1);
+
+    // sets status flag
+    doorIsOpen = true;
+    // desired closing time for door
+    int closeTime = time(NULL) + 4;
+
+    // printf("Door opened\n");
+
+    while (time(NULL) < closeTime || elevio_obstruction())
+    {
+        if (processInput() == -1)
+        {
+            closeTime = time(NULL) + 4;
+            for (int i = 0; i < 4; i++)
+            {
+                deactivateLight(i);
+            }
+            elevio_stopLamp(1);
+            continue;
+        }
+        elevio_stopLamp(0);
     }
 
     elevio_doorOpenLamp(0);
     doorIsOpen = false;
-};
+    // printf("Door closed\n");
+}

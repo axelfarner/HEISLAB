@@ -2,25 +2,38 @@
 
 void createQueueEntry(ButtonType button, int floor);
 
-int processInput() {
-    if (elevio_stopButton()) {
+int processInput()
+{
+    if (elevio_stopButton())
+    {
+
         clearQueue();
+        // printf("Stop detected\n");
         return -1;
     }
     int state;
-    for (int i = 0; i < 4; i++){
-        for (int j = 0; j < 3; j++) {
-            state = elevio_callButton(i, (ButtonType) j);
-            if (state) {
-                createQueueEntry((ButtonType) j, i);
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            state = elevio_callButton(i, (ButtonType)j);
+            if (state)
+            {
+                if (i == currentFloor && doorIsOpen)
+                {
+                    continue;
+                }
+                createQueueEntry((ButtonType)j, i);
+                // printf("Entry added\n");
             }
         }
     }
     return 0;
 }
 
-void createQueueEntry(ButtonType button, int floor){
-    
+void createQueueEntry(ButtonType button, int floor)
+{
+
     Direction dir;
 
     switch (button)
@@ -35,26 +48,28 @@ void createQueueEntry(ButtonType button, int floor){
 
     case BUTTON_CAB:
 
-        if (floor > currentFloor) 
+        if (floor > currentFloor)
         {
             dir = UP;
-        } else if (floor < currentFloor)
+        }
+        else if (floor < currentFloor)
         {
             dir = DOWN;
-        } else 
+        }
+        else
         {
             // hvis etasjen er nåværende etasje, og døren er åpen, do nothing
-            if (doorIsOpen) {
+            if (doorIsOpen)
+            {
                 return;
             }
-
 
             switch (serviceMode)
             {
             case DOWN:
                 dir = UP;
                 break;
-            
+
             case UP:
                 dir = DOWN;
                 break;
