@@ -1,8 +1,5 @@
-// #ifndef ELEVATORCONTROLLER
-// #define ELEVATORCONTROLLER
-
 #pragma once
-
+#include "elevio.h"
 #include <stdbool.h>
 #include "queue.h"
 #include "motorController.h"
@@ -19,4 +16,3 @@ void runElevator();
 
 /// @brief initializes elevator control. Must be run before elevator can be started. 
 void initializeElevator();
-// #endif

@@ -8,12 +8,9 @@
 
 int main() {
 
-    initializeElevator();
+    printf("Elevator control program started\n ------------------------\n");
 
-    while(19) {
-        processInput();
-    }
+    runElevator();
 
-    // runElevator();
     return 0;
 }

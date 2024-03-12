@@ -4,7 +4,9 @@ void createQueueEntry(ButtonType button, int floor);
 
 int processInput() {
     if (elevio_stopButton()) {
+        
         clearQueue();
+        // printf("Stop detected\n");
         return -1;
     }
     int state;
@@ -13,6 +15,7 @@ int processInput() {
             state = elevio_callButton(i, (ButtonType) j);
             if (state) {
                 createQueueEntry((ButtonType) j, i);
+                // printf("Entry added\n");
             }
         }
     }

@@ -34,7 +34,7 @@ void initializeElevator() {
     
     serviceMode = DOWN;
     moveDown();
-    while(checkFloorSensor() == -1){ // this might be a problem >B-P
+    while (checkFloorSensor() == -1){ // this might be a problem >B-P
     }
 
     activateFloorLight(currentFloor);
@@ -44,6 +44,7 @@ void initializeElevator() {
 }
 
 void runElevator() {
+    initializeElevator();
     while(true) {
 
         if (processInput() == -1) {
@@ -59,6 +60,7 @@ void runElevator() {
             // hopper tilbake til toppen
             continue;
         }
+
         elevio_stopLamp(0);
         
         if (shouldStop()) {
@@ -66,6 +68,8 @@ void runElevator() {
             // activates lights
             deactivateLight(currentFloor);
             activateFloorLight(currentFloor);
+            removeFromQueue(serviceMode, currentFloor);
+            printQueues();
             openDoor();
         } 
 
@@ -156,21 +160,24 @@ void openDoor() {
 
     // sets status flag 
     doorIsOpen = true;
-
     // desired closing time for door
-    int closeTime = time() + 4;
+    int closeTime = time(NULL) + 4;
 
-    while(time() < closeTime || elevio_obstruction()) {
+    // printf("Door opened\n");
+    
+    while(time(NULL) < closeTime || elevio_obstruction()) {
         if (processInput() == -1) {
-            closeTime = time() + 4;
+            closeTime = time(NULL) + 4;
             for (int i = 0; i<4; i++){
                 deactivateLight(i);
             }
             elevio_stopLamp(1);
+            continue;
         }
         elevio_stopLamp(0);
     }
 
     elevio_doorOpenLamp(0);
     doorIsOpen = false;
+    // printf("Door closed\n");
 }

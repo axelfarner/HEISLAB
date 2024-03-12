@@ -2,6 +2,7 @@
 
 #include "stdbool.h"
 #include "elevio.h"
+#include "stdio.h"
 
 extern bool isElevatorMoving;
 

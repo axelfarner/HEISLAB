@@ -20,6 +20,11 @@ void addToQueue(Direction dir, int floor);
 /// @warning If floor is larger than 3 or smaller than one, returns 0;
 bool isFloorInQueue(int floor, Direction dir);
 
+/// @brief Removes specific entry from queue
+/// @param dir Working mode
+/// @param floor Floor where entry should be removed
+void removeFromQueue(Direction dir, int floor);
+
 /// @brief clears all entries from all queues
 void clearQueue();
 

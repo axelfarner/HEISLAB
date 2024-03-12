@@ -16,8 +16,27 @@ void addToQueue(Direction dir, int floor) {
         downQueue[floor] = true;
     }
 
-    printQueues();
+    // printQueues();
     return;
+}
+
+
+void removeFromQueue(Direction dir, int floor) {
+   if (floor < 0 || floor > 3) {
+        return;
+        printf("Tried to remove invalid floor: %d", floor);
+    } 
+    
+    switch (dir)
+    {
+    case UP:
+        upQueue[floor] = 0;            
+        break;
+
+    case DOWN:
+        downQueue[floor] = 0;
+        break;
+    }
 }
 
 bool isFloorInQueue(int floor, Direction dir) {
@@ -53,6 +72,13 @@ void printQueues() {
 
 
 bool queueEntryBeyondFloor(Direction dir, int floor) {
+
+    //debug 
+    // if (dir == UP) {
+    //     printf("Checking for floors beneath %d in direction UP\n", floor);
+    // } else {
+    //     printf("Checking for entry beyond %d in direction DOWN\n", floor);
+    // }
     switch (dir)
         {
         case UP:
