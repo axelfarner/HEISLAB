@@ -1,5 +1,8 @@
 #include "inputController.h"
 
+/// @brief Help function. Creates an entry in either downqueue or upqueue. 
+/// @param button The button type pressed 
+/// @param floor The floor at which the button press occured
 void createQueueEntry(ButtonType button, int floor);
 
 int processInput()
