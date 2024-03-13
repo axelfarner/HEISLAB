@@ -82,17 +82,13 @@ void runElevator()
 
         elevio_stopLamp(0);
 
-        if (shouldStop())
-        {
-            stop();
-            // activates lights
-            deactivateLight(currentFloor);
-            activateFloorLight(currentFloor);
-            removeFromQueue(currentFloor);
-            // printQueues();
-            openDoor();
+        if (checkFloorSensor() != -1) {
+            if (shouldStop())
+            {
+                stopAtFloor();
+            }
         }
-
+        
         if (!isElevatorMoving)
         {
             moveElevator();
@@ -100,11 +96,25 @@ void runElevator()
     }
 }
 
+void stopAtFloor() {
+    stop();
+
+    // updates lights
+    deactivateLight(currentFloor);
+    activateFloorLight(currentFloor);
+
+    // removes entries at current floor from queue
+    removeFromQueue(currentFloor);
+    
+    // printQueues();
+    openDoor();
+}
+
 bool shouldStop()
 {
     bool shouldStop = 0;
 
-    if (isFloorInQueue(checkFloorSensor(), serviceMode))
+    if (isFloorInQueue(currentFloor, serviceMode))
     {
         shouldStop = 1;
 
