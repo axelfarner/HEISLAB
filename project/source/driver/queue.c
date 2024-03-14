@@ -21,7 +21,7 @@ void addToQueue(Direction dir, int floor)
         downQueue[floor] = true;
     }
 
-    printQueues();
+    // printQueues();
     return;
 }
 

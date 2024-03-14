@@ -98,15 +98,10 @@ void runElevator()
 
 void stopAtFloor() {
     stop();
-
-    // updates lights
-    deactivateLight(currentFloor);
-    activateFloorLight(currentFloor);
-
     // removes entries at current floor from queue
-    removeFromQueue(currentFloor);
     
-    // printQueues();
+    removeFromQueue(currentFloor);
+    printQueues();
     openDoor();
 }
 
@@ -140,6 +135,8 @@ int checkFloorSensor()
     if (sensorState != -1)
     {
         currentFloor = sensorState;
+        deactivateLight(sensorState);
+        activateFloorLight(sensorState);
     }
     return sensorState;
 }
