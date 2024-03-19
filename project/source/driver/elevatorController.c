@@ -65,7 +65,7 @@ void runElevator()
 
         if (processInput() == -1)
         {
-            elevio_stopLamp(1);
+            setStoplightState(1);
             stop();
             for (int i = 0; i < 4; i++)
             {
@@ -80,7 +80,7 @@ void runElevator()
             continue;
         }
 
-        elevio_stopLamp(0);
+        setStoplightState(0);
 
         if (checkFloorSensor() != -1) {
             if (shouldStop())
@@ -218,10 +218,10 @@ void openDoor()
             {
                 deactivateLight(i);
             }
-            elevio_stopLamp(1);
+            setStoplightState(1);
             continue;
         }
-        elevio_stopLamp(0);
+        setStoplightState(0);
     }
 
     elevio_doorOpenLamp(0);

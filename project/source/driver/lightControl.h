@@ -15,3 +15,7 @@ void deactivateLight(int floor);
 /// @brief Turns indicator light on at given floor
 /// @param[in] floor Current floor 
 void activateFloorLight(int floor);
+
+/// @brief Turns stop light on or off
+/// @param[in] state if not 0 turns light on, if 0 turns light off   
+void setStoplightState(int state);

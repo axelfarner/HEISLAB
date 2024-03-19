@@ -4,6 +4,7 @@
 #include "queue.h"
 #include "motorController.h"
 #include "stdio.h"
+#include "lightControl.h"
 
 extern int currentFloor;
 

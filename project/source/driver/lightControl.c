@@ -21,3 +21,12 @@ void activateFloorLight(int floor){
     elevio_floorIndicator(floor);
     return;
 }
+
+void setStoplightState(int state) {
+    if (state) {
+        elevio_stopLamp(1);
+    }
+    else {
+        elevio_stopLamp(0);
+    }
+}
