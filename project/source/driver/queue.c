@@ -29,8 +29,8 @@ void removeFromQueue(int floor)
 {
     if (floor < 0 || floor > 3)
     {
-        return;
         printf("Tried to remove invalid floor: %d", floor);
+        return;
     }
     
     upQueue[floor] = 0;

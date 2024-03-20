@@ -8,8 +8,7 @@ void openDoor();
 int checkFloorSensor();
 
 /// @brief Moves elevator in direction of serviceMode, if there are queued floors in "serviceMode direction" beyond current floor.
-/// @return 1 if moved, 0 if not.
-bool runQueue();
+void tryMoveInServiceMode();
 
 /// @brief Handles all elevator movement. Starts movement in either up or down direction, if there are floors in the queue
 void moveElevator();
@@ -24,7 +23,7 @@ void stopAtFloor();
 /// @brief Asserted when elevator is switching serviceMode, negated when elevator stops for the first time. 
 bool inTransitionMode = false;
 
-/// @brief Last floor elevator reached
+/// @brief Last floor elevator has reached
 int currentFloor = 0;
 
 /// @brief Asserted while door is open, negated when door closes
@@ -37,9 +36,10 @@ void initializeElevator()
 {
     elevio_init();
 
-    // Turn off lights
+    // Closes door
     elevio_doorOpenLamp(0);
 
+    // turns off lights
     for (int i = 0; i < 4; i++)
     {
         deactivateLight(i);
@@ -47,9 +47,7 @@ void initializeElevator()
 
     serviceMode = DOWN;
     moveDown();
-    while (checkFloorSensor() == -1)
-    { // this might be a problem >B-P
-    }
+    while (checkFloorSensor() == -1) { }
 
     activateFloorLight(currentFloor);
     stop();
@@ -67,6 +65,7 @@ void runElevator()
         {
             setStoplightState(1);
             stop();
+
             for (int i = 0; i < 4; i++)
             {
                 deactivateLight(i);
@@ -98,9 +97,11 @@ void runElevator()
 
 void stopAtFloor() {
     stop();
-    // removes entries at current floor from queue
-    
+    // removes queue entries at current floor from queue
     removeFromQueue(currentFloor);
+    
+    deactivateLight(currentFloor);
+
     printQueues();
     openDoor();
 }
@@ -135,7 +136,6 @@ int checkFloorSensor()
     if (sensorState != -1)
     {
         currentFloor = sensorState;
-        deactivateLight(sensorState);
         activateFloorLight(sensorState);
     }
     return sensorState;
@@ -143,7 +143,9 @@ int checkFloorSensor()
 
 void moveElevator()
 {
-    if (!runQueue())
+    tryMoveInServiceMode();
+
+    if (!isElevatorMoving)
     {
         // swaps servicemode
         serviceMode = (serviceMode == DOWN) ? UP : DOWN;
@@ -156,12 +158,8 @@ void moveElevator()
     }
 }
 
-/// @brief Tries to move to next entry in queue, if any exist
-/// @return 1 if moved, 0 if not.
-bool runQueue()
+void tryMoveInServiceMode()
 {
-    bool floorInQueue = false;
-
     switch (serviceMode)
     {
     case UP:
@@ -169,13 +167,9 @@ bool runQueue()
         {
             if (isFloorInQueue(i, serviceMode))
             {
-                floorInQueue = true;
+                moveUp();
                 break;
             }
-        }
-        if (floorInQueue)
-        {
-            moveUp();
         }
         break;
 
@@ -184,17 +178,12 @@ bool runQueue()
         {
             if (isFloorInQueue(i, serviceMode))
             {
-                floorInQueue = true;
+                moveDown();
                 break;
             }
         }
-        if (floorInQueue)
-        {
-            moveDown();
-        }
         break;
     }
-    return floorInQueue;
 }
 
 void openDoor()
@@ -207,17 +196,17 @@ void openDoor()
     // desired closing time for door
     int closeTime = time(NULL) + 4;
 
-    // printf("Door opened\n");
-
     while (time(NULL) < closeTime || elevio_obstruction())
     {
         if (processInput() == -1)
         {
+            // changes the closetime 
             closeTime = time(NULL) + 4;
             for (int i = 0; i < 4; i++)
             {
                 deactivateLight(i);
             }
+
             setStoplightState(1);
             continue;
         }
