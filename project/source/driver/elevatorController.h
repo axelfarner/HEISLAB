@@ -5,6 +5,7 @@
 #include "motorController.h"
 #include "stdio.h"
 #include "lightControl.h"
+#include "inputHandler.h"
 
 extern int currentFloor;
 
@@ -14,6 +15,3 @@ extern Direction serviceMode;
 
 /// @brief Initializes elevator, then runs continous main loop controlling the elevator. 
 void runElevator();
-
-/// @brief initializes elevator. 
-void initializeElevator();

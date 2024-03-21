@@ -1,5 +1,8 @@
 #include "elevatorController.h"
 
+/// @brief initializes elevator. 
+void initializeElevator();
+
 /// @brief Opens door for 3 seconds. Holds door open if stopbutton pressed
 void openDoor();
 
@@ -8,7 +11,7 @@ void openDoor();
 int checkFloorSensor();
 
 /// @brief Moves elevator in direction of serviceMode, if there are queued floors in "serviceMode direction" beyond current floor.
-void tryMoveInServiceMode();
+void attemptMoveInServiceMode();
 
 /// @brief Handles all elevator movement. Starts movement in either up or down direction, if there are floors in the queue
 void moveElevator();
@@ -102,7 +105,7 @@ void stopAtFloor() {
     
     deactivateLight(currentFloor);
 
-    printQueues();
+    // printQueues(); // comment in for debug
     openDoor();
 }
 
@@ -143,7 +146,7 @@ int checkFloorSensor()
 
 void moveElevator()
 {
-    tryMoveInServiceMode();
+    attemptMoveInServiceMode();
 
     if (!isElevatorMoving)
     {
@@ -152,13 +155,18 @@ void moveElevator()
 
         if (queueEntryBeyondFloor(serviceMode, currentFloor))
         {
+
             inTransitionMode = true;
-            (serviceMode == DOWN) ? moveUp() : moveDown();
+            if (serviceMode == DOWN) {
+                moveUp();
+            } else {
+                moveDown();
+            }
         }
     }
 }
 
-void tryMoveInServiceMode()
+void attemptMoveInServiceMode()
 {
     switch (serviceMode)
     {
@@ -215,5 +223,4 @@ void openDoor()
 
     elevio_doorOpenLamp(0);
     doorIsOpen = false;
-    // printf("Door closed\n");
 }

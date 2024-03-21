@@ -1,6 +1,6 @@
 {
     "files.associations": {
         "elevatorcontroller.h": "c",
-        "inputcontroller.h": "c"
+        "inputHandler.h": "c"
     }
 }
