@@ -3,13 +3,13 @@
 #include "stdbool.h"
 #include "elevio.h"
 
-/// @brief Switches on the light with given buttontype in given floor
+/// @brief Switches on the light for given buttontype in given floor
 /// @param[in] floor Floor of light being turned on 
 /// @param[in] button Buttontype of button being turned on
 void activateLight(int floor, ButtonType button);
 
-/// @brief Deactivates all lights associated with given floor, except indicator light
-/// @param[in] floor Floor of lights being turned off
+/// @brief Deactivates all button lights associated with given floor
+/// @param[in] floor Floor of lights to turn off
 void deactivateLight(int floor);
 
 /// @brief Turns indicator light on at given floor
@@ -17,5 +17,5 @@ void deactivateLight(int floor);
 void activateFloorLight(int floor);
 
 /// @brief Turns stop light on or off
-/// @param[in] state if not 0 turns light on, if 0 turns light off   
+/// @param[in] state if 0 turns light off, otherwise turns on   
 void setStoplightState(int state);

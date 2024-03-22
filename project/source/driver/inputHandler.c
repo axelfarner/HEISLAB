@@ -11,7 +11,7 @@ int processInput()
     {
 
         clearQueue();
-        // printf("Stop detected\n");
+        // printf("Stop detected\n"); //comment in for debug
         return -1;
     }
     int state;
@@ -27,7 +27,6 @@ int processInput()
                     continue;
                 }
                 createQueueEntry((ButtonType)j, i);
-                // printf("Entry added\n");
             }
         }
     }

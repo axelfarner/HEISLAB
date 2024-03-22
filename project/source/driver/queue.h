@@ -11,7 +11,7 @@ typedef enum
 
 /// @brief Adds a request to either up or down queue
 /// @param[in] dir Direction of request
-/// @param[in] floor Floor elevator needs to go to fulfill request
+/// @param[in] floor Floor to add request to
 /// @warning If floor is larger than 3 or smaller than one, does nothing. No error is thrown
 void addToQueue(Direction dir, int floor);
 
@@ -23,16 +23,15 @@ void addToQueue(Direction dir, int floor);
 bool isFloorInQueue(int floor, Direction dir);
 
 /// @brief Removes specific entry from queue
-/// @param dir Working mode
-/// @param floor Floor where entry should be removed
+/// @param floor Floor where entry should be removed from
 void removeFromQueue(int floor);
 
 /// @brief clears all entries from all queues
 void clearQueue();
 
 /// @brief checks whether the queue contains a floor "beyond" a specified floor. If direction is down, then check downQueue for entries ABOVE floor. If direction is up, check upQueue for entries BELOW floor.
-/// @param dir
-/// @param floor
+/// @param dir direction to be checked beyond
+/// @param floor the floor to be checked beyond
 /// @return 1 if floor exists, 0 if not
 bool queueEntryBeyondFloor(Direction dir, int floor);
 

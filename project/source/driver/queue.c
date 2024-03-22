@@ -84,13 +84,6 @@ void printQueues()
 
 bool queueEntryBeyondFloor(Direction dir, int floor)
 {
-
-    // debug
-    //  if (dir == UP) {
-    //      printf("Checking for floors beneath %d in direction UP\n", floor);
-    //  } else {
-    //      printf("Checking for entry beyond %d in direction DOWN\n", floor);
-    //  }
     switch (dir)
     {
     case UP:

@@ -3,10 +3,10 @@
 /// @brief initializes elevator. 
 void initializeElevator();
 
-/// @brief Opens door for 3 seconds. Holds door open if stopbutton pressed
+/// @brief Opens door for 3 seconds. Holds door open if stopbutton pressed, or obstruction is detected
 void openDoor();
 
-/// @brief checks the floor sensor state. Updates currentFloor
+/// @brief checks the floor sensor state. Updates currentFloor variable
 /// @return state of floor sensor. -1 if between floors.
 int checkFloorSensor();
 
@@ -20,7 +20,7 @@ void moveElevator();
 /// @return 1 if the elevator should stop, 0 if not 
 bool shouldStop();
 
-/// @brief Handles ordinary stops. Checks input continously while running, ends when door is closed.
+/// @brief Handles ordinary stops. Checks button input continously while running, ends when door is closed.
 void stopAtFloor();
 
 /// @brief Asserted when elevator is switching serviceMode, negated when elevator stops for the first time. 
@@ -201,6 +201,7 @@ void openDoor()
 
     // sets status flag
     doorIsOpen = true;
+    
     // desired closing time for door
     int closeTime = time(NULL) + 4;
 
