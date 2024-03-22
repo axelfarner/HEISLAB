@@ -9,7 +9,9 @@ extern bool isElevatorMoving;
 
 /// @brief Starts motor movement up 
 void moveUp();
+
 /// @brief Starts motor movement down
 void moveDown();
+
 /// @brief Stops motor movement
 void stop();
